@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://cl1xh5o8thnb5"]
+
+[ext_resource type="Script" path="res://Camera2D.gd" id="1_2uuym"]
+[ext_resource type="Texture2D" uid="uid://c3qx2olyeq4og" path="res://icon.svg" id="1_80hfu"]
+[ext_resource type="PackedScene" uid="uid://uwrvqa6hmaf2" path="res://EditorConfig.tscn" id="1_johc3"]
+
+[node name="Node2D" type="Node2D"]
+metadata/_edit_vertical_guides_ = [1152.0]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(575.07, 323.042)
+script = ExtResource("1_2uuym")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+texture_repeat = 3
+position = Vector2(483.666, 323.042)
+motion_mirroring = Vector2(4227, 2698)
+
+[node name="TextureRect5" type="TextureRect" parent="ParallaxBackground/ParallaxLayer2"]
+offset_left = -484.0
+offset_top = -323.0
+offset_right = 3743.0
+offset_bottom = 2375.0
+texture = ExtResource("1_80hfu")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(547.666, 639.173)
+texture = ExtResource("1_80hfu")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Node2D" parent="CanvasLayer" instance=ExtResource("1_johc3")]
+light_mask = 2
+visibility_layer = 2
+size_flags_horizontal = 3
+metadata/_edit_lock_ = true
