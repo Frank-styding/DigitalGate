@@ -10,7 +10,6 @@ var mouse_pos: Vector2 = Vector2(0,0)
 func _input(event: InputEvent):
 	if event is InputEventMouseButton :
 		if event.button_index == MOUSE_BUTTON_MIDDLE:
-			get_viewport().set_input_as_handled();
 			if event.is_pressed():
 				_previousPosition = event.position;
 				_moveCamera = true;
@@ -23,7 +22,6 @@ func _input(event: InputEvent):
 			zoom_at_point(1/zoom_step)
 			
 	elif event is InputEventMouseMotion && _moveCamera:
-		get_viewport().set_input_as_handled();
 		mouse_pos = event.position
 		position += (_previousPosition - event.position) / zoom;
 		_previousPosition = event.position;

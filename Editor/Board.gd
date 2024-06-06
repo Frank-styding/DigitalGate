@@ -1,21 +1,9 @@
 extends TileMap
-
 class_name Board
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	GateController.set_current("And")
+func get_tile_mose_pos():
+	var mouse_pos = get_local_mouse_position()
+	return local_to_map(mouse_pos)
 
-
-
-
-func _input(event: InputEvent):
-	if event is InputEventMouseButton :
-		if event.button_index == MOUSE_BUTTON_LEFT && event.is_pressed():
-			var position = get_local_mouse_position()
-			var tile_mouse_pos = local_to_map(position)
-			var n_gate = GateController.new_gate(tile_mouse_pos)
-			
-			if n_gate is Classes.GateData:
-				if GateController.cell_is_emty(n_gate):
-					set_cell(0,tile_mouse_pos,2,Vector2i(0,0),2)
+func convert_grid_pos(grid_pos):
+	return Vector2(grid_pos * Gloval.cell_size) + position + Vector2.ONE * 0.5 * Gloval.cell_size

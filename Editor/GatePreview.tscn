@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cisshxsq7ec05"]
+
+[ext_resource type="Script" path="res://GatePreview.gd" id="1_05tpj"]
+
+[node name="GatePreview" type="ColorRect"]
+offset_left = 1.29779
+offset_top = 0.405884
+offset_right = 65.2978
+offset_bottom = 64.4059
+color = Color(0, 0.627331, 0.370581, 0.419608)
+script = ExtResource("1_05tpj")

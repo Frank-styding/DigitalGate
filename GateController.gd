@@ -1,5 +1,6 @@
 extends Node
 
+#region init behavior
 var and_data = Classes.GateBehavior.new(
 	"A&B",
 	"And",
@@ -22,57 +23,82 @@ var and_data = Classes.GateBehavior.new(
 	}
 )
 
-var behavior_data:Dictionary = { "And": and_data }
-var current_behavior: Classes.GateBehavior = null
-var current_gate: Classes.GateData = null
+var or_data = Classes.GateBehavior.new(
+	"A&B",
+	"Or",
+	{
+		"A":{
+			"type":0,
+			"width":1,
+			"value":0,
+		},
+		"B":{
+			"type":0,
+			"width":1,
+			"value":0,
+		},
+		"C":{
+			"type":1,
+			"width":1,
+			"value":0,
+		}
+	}
+)
 
+#endregion
+
+
+var behavior_data:Dictionary = { "And": and_data, "Or": or_data }
+var current_behavior: Classes.GateBehavior = null
+var current_gate_data: Classes.GateData = null
+var list_gates = {};
+var grid = {}
 
 func register_behavior(data: Classes.GateBehavior):
 	behavior_data[data.gate_name] = data
 
-
 func set_current(name:String):
 	if behavior_data.has(name):
 		current_behavior = behavior_data[name]
-		
-func new_gate(pos:Vector2i):
+
+func new_gate_data():
 	if current_behavior == null:
 		return null
-	current_gate = Classes.GateData.new(current_behavior)
-	current_gate.grid_pos = pos
-	return current_gate
+	current_gate_data = Classes.GateData.new(current_behavior)
+	return current_gate_data
 
-
-var list_gates = {};
-var grid = {}
-
-func register_gate(gate:Classes.GateData):
-	list_gates[gate.id] = gate
-	grid["%d:%d" % [gate.grid_pos.x,gate.grid_pos.y]] = gate.id
+func register_gate_data(gate_data):
+	list_gates[gate_data.id] = gate_data
+	var x = gate_data.grid_pos.x
+	var y = gate_data.grid_pos.y
+	var size_x = gate_data.grid_size.x
+	var size_y =  gate_data.grid_size.y
+	grid["%d:%d" % [x,y]] = gate_data.id
 	
+	for i in range(size_x):
+		for j in range(size_y):
+			grid["%d:%d" % [x+i,y+j]] = gate_data.id
 	
-	for i in range(gate.grid_size.x):
-		for j in range(gate.grid_size.y):
-			grid["%d:%d" % [gate.grid_pos.x+i,gate.grid_pos.y+j]] = gate.id
+	if gate_data.left_co:
+		for j in range(size_y):
+			grid["%d:%d" % [x-1,y+j]] = ""
+			grid["%d:%d" % [x-2,y+j]] = ""
 	
-	if gate.left_co:
-		for j in range(gate.grid_size.y):
-			grid["%d:%d" % [gate.grid_pos.x - 1,gate.grid_pos.y+j]] = "c::"+gate.id
+	if gate_data.right_co:
+		for j in range(size_y):
+			grid["%d:%d" % [x+size_x ,y+j]] = ""
+			grid["%d:%d" % [x+size_x+1,y+j]] = ""
 	
-	if gate.right_co:
-		for j in range(gate.grid_size.y):
-			grid["%d:%d" % [gate.grid_pos.x + gate.grid_size.x ,gate.grid_pos.y+j]] = "c::"+gate.id
-	
-	if gate.top_co:
-		for i in range(gate.grid_size.x):
-			grid["%d:%d" % [gate.grid_pos.x + i ,gate.grid_pos.y - 1]] = "c::"+gate.id
-	
-	if gate.bottom_co:
-		for i in range(gate.grid_size.x):
-			grid["%d:%d" % [gate.grid_pos.x + i ,gate.grid_pos.y+gate.grid_size.y]] = "c::"+gate.id
-	
+	if gate_data.top_co:
+		for i in range(size_x):
+			grid["%d:%d" % [x+i ,y-1]] = ""
+			grid["%d:%d" % [x+i ,y-2]] = ""
 			
-	
+	if gate_data.bottom_co:
+		for i in range(gate_data.grid_size.x):
+			grid["%d:%d" % [x+i,y+size_y]] = ""
+			grid["%d:%d" % [x+i,y+size_y+1]] = ""
+
 func cell_is_emty(gate: Classes.GateData):
 	for i in range(gate.grid_size.x):
 		for j in range(gate.grid_size.y):
@@ -80,5 +106,12 @@ func cell_is_emty(gate: Classes.GateData):
 			if grid.has(key):
 				return false
 	return true
-	
-	
+
+func get_gate_data(gate_id:String):
+	if not list_gates.has(gate_id):
+		return null
+	return list_gates[gate_id]
+
+
+
+

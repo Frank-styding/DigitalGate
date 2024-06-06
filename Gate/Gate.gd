@@ -5,11 +5,16 @@ extends Node2D
 
 var gate_data: Classes.GateData;
 func _ready():
-	if GateController.current_gate == null:
+	if gate_data == null:
 		return
-		
-	gate_data = GateController.current_gate
-	GateController.register_gate(gate_data)
+	init()
+
+func set_gate_data(data):
+	gate_data = data
+	
+	GateController.register_gate_data(data)
+	
+func init():
 	set_connections();
 	calc_size()
 	update_name();
@@ -38,6 +43,7 @@ func create_conections(list,container_name,horizontal):
 			connection.type = gate_data.behavior.connections[item]["type"]
 			connection.binary_width = gate_data.behavior.connections[item]["width"]
 			connection.connection_name = item
+			connection.gate_id = gate_data.id;
 			container.add_child(connection)
 	
 func set_connections():

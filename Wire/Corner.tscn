@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1svdv0eat45e"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_juv5y"]
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Corner" type="Node2D"]
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = -11.0
+offset_top = -11.0
+offset_right = 11.0
+offset_bottom = 11.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_juv5y")

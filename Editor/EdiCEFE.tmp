@@ -28,6 +28,8 @@ sources/0 = SubResource("TileSetAtlasSource_ytupb")
 script = ExtResource("1_uybv6")
 metadata/_edit_vertical_guides_ = [1152.0]
 
+[node name="Gates" type="CanvasGroup" parent="."]
+
 [node name="Controls" type="CanvasGroup" parent="."]
 
 [node name="Board" type="TileMap" parent="Controls"]
@@ -44,8 +46,8 @@ visible = false
 [node name="Node2D" parent="Controls/CanvasLayer" instance=ExtResource("6_exgrp")]
 light_mask = 2
 visibility_layer = 2
-offset_left = 875.0
 size_flags_horizontal = 3
+metadata/_edit_lock_ = true
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="Controls"]
 
@@ -65,5 +67,3 @@ position = Vector2(575.07, 323.042)
 script = ExtResource("2_qae2w")
 
 [node name="Wires" type="CanvasGroup" parent="."]
-
-[node name="Gates" type="CanvasGroup" parent="."]

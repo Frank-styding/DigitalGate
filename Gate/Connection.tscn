@@ -22,9 +22,12 @@ grow_vertical = 2
 script = ExtResource("1_er5u8")
 color = Color(0.329412, 0.494118, 0.643137, 1)
 n_size = Vector2(33, 10)
-radius = 3
+radius = 6
 
 [node name="Panel" type="Panel" parent="."]
 custom_minimum_size = Vector2(33, 10)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vpbxm")
+
+[connection signal="mouse_entered" from="Panel" to="." method="_on_panel_mouse_entered"]
+[connection signal="mouse_exited" from="Panel" to="." method="_on_panel_mouse_exited"]
