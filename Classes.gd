@@ -116,35 +116,49 @@ class WireData:
 	
 	var id: String = ""
 	
-	var current_point: int
-	var current_path: int
-	var start_path
-	var block_direction
-	var start_click
+	var current_point_idx: int
+	var current_path_idx: int
+
+	var is_start_path: bool
+	var block_direction: bool
+	var start_click: bool
 	var size: int
 	var direction: Vector2
-	var is_end
+	var is_end: bool
+	var last_point: Vector2
 	
 	func _init():
-		paths.append([])
-		current_path = 0
-		current_point = -1
+		current_path_idx = 0
+		current_point_idx = -1
 		size = 1
 		direction = Vector2(0, 0)
-		start_path = false
+		is_start_path = false
 		block_direction = true
 		start_click = true
 		is_end = false
+		last_point = Vector2()
 		id = Uuid.generate_uuid_v4()
 
-	func is_grid_pos_inside(point: Vector2, last=true):
-		for i in range(1, paths[current_path].size() + (0 if last else - 1)):
-			var prev_p = paths[current_path][i - 1]
-			var prev_p1 = paths[current_path][i]
+	func is_grid_pos_inside(point: Vector2, exclude_start=false, exclude_last=false, all=true):
+		for i in range((0 if exclude_start else 1), paths[current_path_idx].size() + ( - 1 if exclude_last else 0)):
+			var prev_p = paths[current_path_idx][i - 1]
+			var prev_p1 = paths[current_path_idx][i]
 			var distance = prev_p1.distance_to(prev_p);
 			var distance1 = point.distance_to(prev_p) + point.distance_to(prev_p1)
 			if distance == distance1:
 				return true
+		
+		if paths.size() < 1||!all:
+			return false
+
+		for j in range(paths.size() - 1):
+			for i in range(paths[j].size()):
+				var prev_p = paths[j][i - 1]
+				var prev_p1 = paths[j][i]
+				var distance = prev_p1.distance_to(prev_p);
+				var distance1 = point.distance_to(prev_p) + point.distance_to(prev_p1)
+				if distance == distance1:
+					return true
 		return false
 	
 	func start(gate_id: String, connection: String):
@@ -158,75 +172,106 @@ class WireData:
 		var n_point = gate.get_conection_pos(connection)
 		direction = gate.get_connection_direction(connection)
 		
-		start_path = true
-		add_point(n_point)
-		add_point(n_point, false)
+		is_start_path = true
+		paths.append([
+			Vector2(n_point),
+			n_point
+		])
+
+		last_point = Vector2(n_point)
+		current_point_idx = 1
 
 	func start_sub_line(pos: Vector2):
-		start_path = true
-		current_path += 1
-		add_point(pos)
-		add_point(pos)
+		is_start_path = true
+		current_path_idx += 1
+		current_point_idx = -1
+		paths.append([
+			Vector2(pos),
+			pos
+		])
+		last_point = Vector2(pos)
+		current_point_idx = 1
 	
 	func add_point(pos: Vector2, clone=true):
-
-		if not start_path:
+		if not is_start_path:
 			return
 
 		if start_click:
 			start_click = false
 			return
-
-		if is_grid_pos_inside(pos, false):
+		
+		if is_grid_pos_inside(pos, false, true)||(last_point.x == pos.x&&last_point.y == pos.y):
 			return
 	
 		if clone:
-			paths[current_path].append(Vector2(pos))
+			paths[current_path_idx].append(Vector2(pos))
 		else:
-			paths[current_path].append(pos)
-
-		block_direction = paths[current_path].size() < 3
-
-		current_point += 1;
-	
-	func move_point(pos: Vector2):
-		if not start_path:
-			return
+			paths[current_path_idx].append(pos)
 		
-		var prev_point = paths[current_path][paths[current_path].size() - 2]
+		last_point = Vector2(pos)
 
-		if not block_direction:
-			var prev_point_1 = paths[current_path][paths[current_path].size() - 3]
-			var n_direction = Vector2()
+		block_direction = paths[current_path_idx].size() < 3
+		current_point_idx += 1;
+	
+	func calc_direction(pos: Vector2, gloval_pos: Vector2, board: Board):
+		if block_direction:
+			return direction
 
-			var v1: Vector2 = (prev_point - prev_point_1).normalized()
-			var v2 = (pos - prev_point).normalized()
-			var dot1 = v1.dot(v2)
+		var current_path = paths[current_path_idx]
+		var prev_point_1 = current_path[current_path.size() - 2]
+		var n_direction = Vector2()
+
+		if current_path.size() > 2:
+			var prev_point = current_path[current_path.size() - 3]
+			var v1 = (prev_point - prev_point_1).normalized()
+			var v2 = (pos - prev_point_1).normalized()
+			var dot = v1.dot(v2)
 			var cross = v1.cross(v2)
-			if dot1 > 0:
-				n_direction = v1
+			if dot < 0:
+				n_direction = v1 * - 1
 			else:
 				if cross > 0:
 					n_direction = Vector2( - v1.y, v1.x)
 				else:
 					n_direction = Vector2(v1.y, -v1.x)
-			direction = n_direction
+			return n_direction
+		if current_path_idx == 0||current_path.size() > 3:
+			return direction
+		var v3 = (gloval_pos - board.convert_grid_pos(prev_point_1)).normalized()
+		if abs(v3.x) > abs(v3.y):
+			n_direction = Vector2(v3.x, 0).normalized()
+		else:
+			n_direction = Vector2(0, v3.y).normalized()
+
+		return n_direction
+	
+	func move_point(grid_pos: Vector2, gloval_pos: Vector2, board: Board):
+		if not is_start_path:
+			return
+
+		var current_path = paths[current_path_idx]
 		
-		var dot = direction.dot(pos - prev_point)
+		direction = calc_direction(grid_pos, gloval_pos, board)
+		var prev_point = current_path[current_path.size() - 2]
+		var dot = direction.dot(grid_pos - prev_point)
 		if dot < 0:
 			return
 		var n_pos = dot * direction + prev_point
-		pos.x = n_pos.x
-		pos.y = n_pos.y
+		grid_pos.x = n_pos.x
+		grid_pos.y = n_pos.y
 
-		paths[current_path][current_point].x = pos.x
-		paths[current_path][current_point].y = pos.y
+		current_path[current_point_idx].x = grid_pos.x
+		current_path[current_point_idx].y = grid_pos.y
+
+	func update_point(grid_pos: Vector2):
+		paths[current_path_idx][current_point_idx].x = grid_pos.x
+		paths[current_path_idx][current_point_idx].y = grid_pos.y
 	
 	func get_last_direction():
-		return (paths[current_path][ - 1] - paths[current_path][ - 2]).normalized()
+		return (paths[current_path_idx][ - 1] - paths[current_path_idx][ - 2]).normalized()
 
 	func end(gate_id: String, connection: String):
-		if not start_path:
+		if not is_start_path:
 			return
 			
 		var gate = GateController.get_gate_data(gate_id) as GateData
@@ -245,12 +290,14 @@ class WireData:
 		var n_direction = gate.get_connection_direction(connection)
 
 		if n_direction.dot(direction) != 0:
-			move_point(n_point)
+			update_point(n_point)
 		else:
 			add_point(n_point)
+			
 		is_end = true
-		start_path = false
-		current_point = -1
+		is_start_path = false
+		current_point_idx = -1
+		start_click = false
 	
 	func get_gloval_paths(board: Board):
 		var n_paths = []
@@ -262,7 +309,7 @@ class WireData:
 		return n_paths
 
 	func get_gloval_current_path(board: Board):
-		return get_gloval_paths(board)[current_path]
+		return get_gloval_paths(board)[current_path_idx]
 
 	func gloval_point_is_inside(point: Vector2, board: Board):
 		var gloval_paths = get_gloval_paths(board)

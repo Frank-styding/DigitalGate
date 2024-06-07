@@ -12,6 +12,7 @@ func _ready():
 	ModeController.close_mode.connect(close_mode)
 	WireController.on_create_wire.connect(create_wire)
 	WireController.on_update_wire.connect(update_wire)
+	WireController.on_clear_current_wire.connect(clear_current_wire)
 	ModeController.set_mode(0)
 	ModeController.set_mode(1)
 
@@ -91,10 +92,16 @@ var wire = null
 func create_wire(n_wire_data: Classes.WireData):
 	wire = Wire.instantiate()
 	wire.wire_data = n_wire_data
+	wire.idx = n_wire_data.current_path_idx
 	WiresContainer.add_child(wire)
 
 func update_wire():
+	if wire == null||WireController.current_wire == null:
+		return
 	wire.update_points(WireController.current_wire.get_gloval_current_path(board))
+
+func clear_current_wire():
+	wire = null
 
 func start_connect():
 	pass
@@ -106,17 +113,15 @@ func connect_move_mouse():
 	if WireController.current_wire == null||wire == null:
 		return
 
-	WireController.current_wire.move_point(mouse_grid_pos)
+	WireController.current_wire.move_point(mouse_grid_pos, gloval_mouse_pos, board)
 	WireController.update_wire()
 	
 func connect_mouse_down():
 	WireController.select_wire(gloval_mouse_pos, mouse_grid_pos, board)
-	if WireController.current_wire == null||wire == null:
-		wire = null
-		return
-		
-	WireController.current_wire.add_point(mouse_grid_pos)
 	WireController.update_wire()
+	if WireController.current_wire == null:
+		return
+	WireController.current_wire.add_point(mouse_grid_pos)
 #endregion
 #region mouse controls
 func mouse_move():
@@ -125,29 +130,27 @@ func mouse_move():
 	if ModeController.mode == 1:
 		connect_move_mouse()
 
-func mouse_left_pressed():
+func mouse_pressed():
+	pass
+
+var click = true
+
+func mouse_click():
 	if ModeController.mode == 0:
 		mouse_insert_gate()
 	if ModeController.mode == 1:
 		connect_mouse_down()
 
-var click = true
-
-func mouse_click():
-	pass
-
 func _input(event: InputEvent):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-
 			if event.is_pressed():
-				mouse_left_pressed()
+				mouse_pressed()
+				if click:
+					mouse_click()
+					click = false
 			else:
 				click = true
-
-			if click:
-
-				pass
 
 	elif event is InputEventMouseMotion:
 		mouse_grid_pos = Vector2(board.get_tile_mose_pos())

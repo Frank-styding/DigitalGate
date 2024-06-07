@@ -1,6 +1,7 @@
 extends Line2D
 
 var wire_data;
+var idx;
 
 @onready var Corner = preload ("res://Wire/Corner.tscn")
 
@@ -19,7 +20,7 @@ func update_points(path):
 		for i in range(points.size(), path.size()):
 			add_point(path[i])
 		
-		if path.size() > 2:
+		if path.size() > 2||idx > 0:
 			var n_corner = Corner.instantiate()
 			n_corner.position = path[- 2]
 			corners.append(n_corner)
@@ -28,7 +29,7 @@ func update_points(path):
 	else:
 		for i in range(path.size(), points.size()):
 			points.remove_at(i)
-			if i - 1 >= 0:
+			if i - 1 >= 0&&i - 1&&i - 1 < corners.size():
 				remove_child(corners[i - 2])
 				corners[i - 1].free()
 				corners.remove_at(i - 2)

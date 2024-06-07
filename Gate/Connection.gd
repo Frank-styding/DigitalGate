@@ -52,6 +52,8 @@ func _input(event: InputEvent):
 				if click:
 					WireController.start(gate_id, connection_name)
 					WireController.end(gate_id, connection_name)
+					if WireController.current_wire == null:
+						get_tree().get_root().set_input_as_handled()
 					click = false
 			else:
 				click = true

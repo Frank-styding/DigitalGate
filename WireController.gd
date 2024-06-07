@@ -9,6 +9,7 @@ var current_wire: Classes.WireData = null
 
 signal on_create_wire(current_wire);
 signal on_update_wire();
+signal on_clear_current_wire();
 
 func start(gate_id: String, connection: String):
 	if current_wire != null:
@@ -27,6 +28,7 @@ func end(gate_id: String, connection: String):
 	current_wire.end(gate_id, connection)
 	wires[current_wire.id] = current_wire
 	on_update_wire.emit()
+	on_clear_current_wire.emit()
 	current_wire = null
 	_start_connection = {
 		"gate": "",
@@ -36,10 +38,11 @@ func end(gate_id: String, connection: String):
 func select_wire(gloval_pos: Vector2, grid_pos: Vector2, board: Board):
 	if current_wire != null:
 		return
-		
 	for wire_id in wires:
 		if wires[wire_id].gloval_point_is_inside(gloval_pos, board):
 			wires[wire_id].start_sub_line(grid_pos)
+			current_wire = wires[wire_id]
+			on_create_wire.emit(current_wire)
 
 func update_wire():
 	on_update_wire.emit()
