@@ -1,9 +1,9 @@
 @tool
 extends Node2D
 
-@onready var GateContection = preload("res://Gate/Connection.tscn")
+@onready var GateContection = preload ("res://Gate/Connection.tscn")
 
-var gate_data: Classes.GateData;
+var gate_data: CGate.GateData;
 func _ready():
 	if gate_data == null:
 		return
@@ -19,17 +19,16 @@ func init():
 	calc_size()
 	update_name();
 	
-	
 func calc_size():
-	var n_width = (gate_data.grid_size.x) * Gloval.cell_size
-	var n_height = (gate_data.grid_size.y) * Gloval.cell_size
-	$Box.size = Vector2i(n_width,n_height)
+	var n_width = (gate_data.grid_size.x) * Global.cell_size
+	var n_height = (gate_data.grid_size.y) * Global.cell_size
+	$Box.size = Vector2i(n_width, n_height)
 
-func create_conections(list,container_name,horizontal):
+func create_conections(list, container_name, horizontal):
 	var container = find_child(container_name)
 	
-	if container is VBoxContainer || container is HBoxContainer:
-		container.add_theme_constant_override("separation", Gloval.cell_size/2)
+	if container is VBoxContainer||container is HBoxContainer:
+		container.add_theme_constant_override("separation", Global.cell_size / 2.0)
 	
 	for child in container.get_children():
 		container.remove_child(child)
@@ -47,11 +46,10 @@ func create_conections(list,container_name,horizontal):
 			container.add_child(connection)
 	
 func set_connections():
-	create_conections(gate_data.left_co,"Left",false)
-	create_conections(gate_data.right_co,"Right",false)
-	create_conections(gate_data.top_co,"Top",true)
-	create_conections(gate_data.bottom_co,"Bottom",true)
+	create_conections(gate_data.left_co, "Left", false)
+	create_conections(gate_data.right_co, "Right", false)
+	create_conections(gate_data.top_co, "Top", true)
+	create_conections(gate_data.bottom_co, "Bottom", true)
 
 func update_name():
 	$Box/Name.text = gate_data.behavior.type
-

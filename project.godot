@@ -16,12 +16,23 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Uuid="*res://Uuid.gd"
-Classes="*res://Classes.gd"
-GateController="*res://GateController.gd"
-Gloval="*res://Gloval.gd"
-WireController="*res://WireController.gd"
-ModeController="*res://ModeController.gd"
+Colors="*res://Scripts/Constants/Colors.gd"
+Global="*res://Scripts/Constants/Global.gd"
+Collisions="*res://Scripts/Util/Collisions.gd"
+Uuid="*res://Scripts/Util/Uuid.gd"
+CWire="*res://Scripts/Clases/C_Wire.gd"
+CGate="*res://Scripts/Clases/C_Gate.gd"
+GateController="*res://Scripts/Controllers/GateController.gd"
+WireController="*res://Scripts/Controllers/WireController.gd"
+MouseController="*res://Scripts/Controllers/MouseController.gd"
+InsertGate="*res://Scripts/Controllers/EditorTools/InsertGate.gd"
+ConnectGate="*res://Scripts/Controllers/EditorTools/ConnectGate.gd"
+EditorToolsController="*res://Scripts/Controllers/EditorToolsController.gd"
+EditorController="*res://Scripts/Controllers/EditorController.gd"
+
+[dotnet]
+
+project/assembly_name="DigitalGate"
 
 [input]
 

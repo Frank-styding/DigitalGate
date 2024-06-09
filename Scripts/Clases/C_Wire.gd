@@ -1,114 +1,5 @@
 extends Node
 
-class GateBehavior:
-	var code: String = ""
-	var type: String = ""
-	
-	var connections = {}
-	
-	func _init(n_code, n_type, n_connections={}):
-		self.code = n_code
-		self.type = n_type
-		self.connections = n_connections
-	
-	func add_connection(n_name, n_type, width=1):
-		self.connections[n_name] = {
-			"n_type": n_type,
-			"width": width,
-			"value": 0
-		}
-
-class GateData:
-	var behavior: GateBehavior
-	var left_co = []
-	var right_co = []
-	var top_co = []
-	var bottom_co = []
-	
-	var grid_pos = Vector2i(0, 0)
-	var grid_size = Vector2i(0, 0)
-	
-	var id;
-	
-	func _init(n_behavior, left=[], right=[], top=[], bottom=[]):
-		self.behavior = n_behavior
-		self.left_co = left
-		self.right_co = right
-		self.top_co = top
-		self.bottom_co = bottom
-		self.id = Uuid.generate_uuid_v4()
-		
-		if left.size() == 0&&right.size() == 0&&top.size() == 0&&bottom.size() == 0:
-			for con_name in n_behavior.connections.keys():
-				var con = n_behavior.connections[con_name]
-				if con["type"] == 0:
-					right_co.append(con_name)
-				if con["type"] == 1:
-					left_co.append(con_name)
-					
-		calc_size()
-
-	func calc_size():
-		var max_w_count = max(top_co.size(), bottom_co.size(), 1);
-		var max_h_count = max(left_co.size(), right_co.size(), 1);
-		grid_size = Vector2i(max_w_count, max_h_count)
-	
-	func _rotate():
-		var aux1 = left_co
-		var aux2 = right_co
-		var aux3 = top_co
-		var aux4 = bottom_co
-		
-		left_co = aux4
-		top_co = aux1
-		right_co = aux3
-		bottom_co = aux2
-	
-	func _rotate_in():
-		var aux1 = left_co
-		var aux2 = right_co
-		var aux3 = top_co
-		var aux4 = bottom_co
-		
-		left_co = aux3
-		top_co = aux2
-		right_co = aux4
-		bottom_co = aux1
-		
-	func get_conection_pos(connection: String):
-
-		var n_pos = Vector2()
-		
-		var space = 10.0
-
-		if left_co.has(connection):
-			n_pos.y = left_co.find(connection) + grid_pos.y
-			n_pos.x = grid_pos.x - space / Gloval.cell_size - 0.5
-			
-		if right_co.has(connection):
-			n_pos.y = right_co.find(connection) + grid_pos.y
-			n_pos.x = grid_pos.x + grid_size.x + space / Gloval.cell_size - 0.5
-		
-		if top_co.has(connection):
-			n_pos.x = top_co.find(connection) + grid_pos.x
-			n_pos.y = grid_pos.y - space / Gloval.cell_size - 0.5
-		
-		if bottom_co.has(connection):
-			n_pos.x = bottom_co.find(connection) + grid_pos.x
-			n_pos.y = grid_pos.y + grid_size.y + space / Gloval.cell_size - 0.5
-
-		return n_pos
-	
-	func get_connection_direction(connection: String):
-		if left_co.has(connection):
-			return Vector2( - 1, 0)
-		if right_co.has(connection):
-			return Vector2(1, 0)
-		if top_co.has(connection):
-			return Vector2(0, -1)
-		if bottom_co.has(connection):
-			return Vector2(0, 1)
-
 class WireData:
 	var paths = []
 	var input = {}
@@ -162,7 +53,7 @@ class WireData:
 		return false
 	
 	func start(gate_id: String, connection: String):
-		var gate = GateController.get_gate_data(gate_id) as GateData
+		var gate = GateController.get_gate_data(gate_id) as CGate.GateData
 		if gate == null:
 			return
 			
@@ -274,7 +165,7 @@ class WireData:
 		if not is_start_path:
 			return
 			
-		var gate = GateController.get_gate_data(gate_id) as GateData
+		var gate = GateController.get_gate_data(gate_id) as CGate.GateData
 		if gate == null:
 			return
 			
@@ -299,7 +190,7 @@ class WireData:
 		current_point_idx = -1
 		start_click = false
 	
-	func get_gloval_paths(board: Board):
+	func get_global_paths(board: Board):
 		var n_paths = []
 		for i in range(paths.size()):
 			var aux = []
@@ -308,13 +199,13 @@ class WireData:
 			n_paths.append(aux)
 		return n_paths
 
-	func get_gloval_current_path(board: Board):
-		return get_gloval_paths(board)[current_path_idx]
+	func get_global_current_path(board: Board):
+		return get_global_paths(board)[current_path_idx]
 
-	func gloval_point_is_inside(point: Vector2, board: Board):
-		var gloval_paths = get_gloval_paths(board)
+	func global_point_is_inside(point: Vector2, board: Board):
+		var gloval_paths = get_global_paths(board)
 
-		if Gloval.is_point_inside_paths(gloval_paths, point, Gloval.wire_width / 4.0):
+		if Collisions.point_in_paths(gloval_paths, point, Global.wire_width / 4.0):
 			return true
 
 		return false

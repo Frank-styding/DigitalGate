@@ -4,7 +4,7 @@ class_name GateConnection;
 
 var stylebox = StyleBoxFlat.new()
 
-@export var color = Gloval.output_color:
+@export var color = Colors.output_c:
 	set(n_color):
 		stylebox.bg_color = n_color
 		color = n_color
@@ -31,7 +31,7 @@ var gate_id = ""
 @onready var panel = $Panel
 
 func _ready():
-	stylebox.bg_color = Gloval.input_color if type == 0 else Gloval.output_color
+	stylebox.bg_color = Colors.output_c if type == 0 else Colors.input_c
 	stylebox.corner_radius_bottom_left = radius
 	stylebox.corner_radius_bottom_right = radius
 	stylebox.corner_radius_top_right = radius

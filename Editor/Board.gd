@@ -6,4 +6,4 @@ func get_tile_mose_pos():
 	return local_to_map(mouse_pos)
 
 func convert_grid_pos(grid_pos):
-	return Vector2(grid_pos * Gloval.cell_size) + position + Vector2.ONE * 0.5 * Gloval.cell_size
+	return Vector2(grid_pos * Global.cell_size) + position + Vector2.ONE * 0.5 * Global.cell_size

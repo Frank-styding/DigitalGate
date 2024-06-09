@@ -28,6 +28,10 @@ sources/0 = SubResource("TileSetAtlasSource_ytupb")
 script = ExtResource("1_uybv6")
 metadata/_edit_vertical_guides_ = [1152.0]
 
+[node name="Wires" type="CanvasGroup" parent="."]
+
+[node name="Gates" type="CanvasGroup" parent="."]
+
 [node name="Controls" type="CanvasGroup" parent="."]
 
 [node name="Board" type="TileMap" parent="Controls"]
@@ -63,7 +67,3 @@ layer_0/tile_data = PackedInt32Array(-262151, 0, 0, -262150, 0, 0, -262149, 0, 0
 [node name="Camera2D" type="Camera2D" parent="Controls"]
 position = Vector2(575.07, 323.042)
 script = ExtResource("2_qae2w")
-
-[node name="Wires" type="CanvasGroup" parent="."]
-
-[node name="Gates" type="CanvasGroup" parent="."]
