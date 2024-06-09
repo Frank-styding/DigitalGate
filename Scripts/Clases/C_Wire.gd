@@ -136,6 +136,18 @@ class WireData:
 
 		return n_direction
 	
+	func cancel_current_path():
+		
+		if current_path_idx == 0:
+			return
+
+		paths.remove_at(current_path_idx)
+		is_end = false
+		is_start_path = false
+		current_point_idx = -1
+		start_click = false
+		current_path_idx -= 1
+	
 	func move_point(grid_pos: Vector2, gloval_pos: Vector2, board: Board):
 		if not is_start_path:
 			return

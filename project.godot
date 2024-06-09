@@ -16,6 +16,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+InputController="*res://Scripts/Controllers/InputController.gd"
 Colors="*res://Scripts/Constants/Colors.gd"
 Global="*res://Scripts/Constants/Global.gd"
 Collisions="*res://Scripts/Util/Collisions.gd"
@@ -24,7 +25,6 @@ CWire="*res://Scripts/Clases/C_Wire.gd"
 CGate="*res://Scripts/Clases/C_Gate.gd"
 GateController="*res://Scripts/Controllers/GateController.gd"
 WireController="*res://Scripts/Controllers/WireController.gd"
-MouseController="*res://Scripts/Controllers/MouseController.gd"
 InsertGate="*res://Scripts/Controllers/EditorTools/InsertGate.gd"
 ConnectGate="*res://Scripts/Controllers/EditorTools/ConnectGate.gd"
 EditorToolsController="*res://Scripts/Controllers/EditorToolsController.gd"
@@ -36,9 +36,10 @@ project/assembly_name="DigitalGate"
 
 [input]
 
-right_click={
+Escape={
 "deadzone": 0.5,
-"events": []
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":0,"echo":false,"script":null)
+]
 }
 
 [rendering]

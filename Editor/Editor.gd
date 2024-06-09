@@ -36,18 +36,20 @@ func create_wire(wire_data: CWire.WireData):
 	var wire = Wire.instantiate()
 	wire.wire_data = wire_data
 	wire.idx = wire_data.current_path_idx
-	wires[wire_data.id] = wire
+	wires[wire_data.id + ":" + str(wire.idx)] = wire
 	WiresContainer.add_child(wire)
 
-func update_wire(wire_data: CWire.WireData):
+func update_wire(wire_data: CWire.WireData, idx: int):
 	if wire_data == null:
 		return
-	var wire = wires[wire_data.id]
+	var wire = wires[wire_data.id + ":" + str(idx)]
 	wire.update_points(WireController.get_global_path(board))
 
-func destroy_wire():
-
-	pass
+func destroy_wire(wire_data: CWire.WireData, idx: int):
+	var wire = wires[wire_data.id + ":" + str(idx)]
+	if wire != null:
+		WiresContainer.remove_child(wire)
+		wire.free()
 
 func create_gate(gate_data: CGate.GateData):
 	var pos = gate_data.grid_pos

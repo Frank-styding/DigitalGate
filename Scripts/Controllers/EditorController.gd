@@ -1,8 +1,8 @@
 extends Node
 
 signal create_wire(wire_data: CWire.WireData)
-signal update_wire(wire_data: CWire.WireData)
-signal destroy_wire(wire_data: CWire.WireData)
+signal update_wire(wire_data: CWire.WireData, idx: int)
+signal destroy_wire(wire_data: CWire.WireData, idx: int)
 
 signal update_gate(gate_data: CGate.GateData)
 signal create_gate(gate_data: CGate.GateData)

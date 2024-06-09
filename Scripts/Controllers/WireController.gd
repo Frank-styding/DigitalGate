@@ -28,7 +28,7 @@ func end(gate_id: String, connection: String):
 	
 	wires_data[current_wire.id] = current_wire
 
-	EditorController.update_wire.emit(current_wire)
+	EditorController.update_wire.emit(current_wire, current_wire.current_path_idx)
 
 	current_wire = null
 	start_connection = {
@@ -46,6 +46,10 @@ func select_wire(gloval_pos: Vector2, grid_pos: Vector2, board: Board):
 			EditorController.create_wire.emit(current_wire)
 			
 func register_wire(wire_data: CWire.WireData):
+	
+	if wires_data.has(wire_data.id):
+		return
+	
 	wires_data[wire_data.id] = wire_data
 
 func get_global_path(board: Board):
@@ -65,3 +69,16 @@ func add_point(grid_pos: Vector2):
 	if current_wire == null:
 		return
 	current_wire.add_point(grid_pos)
+
+func cancel_wire():
+	if current_wire == null:
+		return
+
+	EditorController.destroy_wire.emit(current_wire, current_wire.current_path_idx)
+	
+	if current_wire.current_path_idx > 0:
+		current_wire.cancel_current_path()
+	else:
+		wires_data.erase(current_wire.id)
+		
+	current_wire = null

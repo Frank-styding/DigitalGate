@@ -4,6 +4,7 @@ signal mouse_down(event: InputEvent)
 signal mosue_up(event: InputEvent)
 signal mouse_click(event: InputEvent)
 signal mouse_move(event: InputEvent)
+signal on_input_update()
 
 var click = true
 
@@ -19,3 +20,5 @@ func _input(event: InputEvent):
 				click = true
 	elif event is InputEventMouseMotion:
 		mouse_move.emit(event)
+
+	on_input_update.emit()

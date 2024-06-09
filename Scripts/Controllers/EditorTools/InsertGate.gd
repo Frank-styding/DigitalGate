@@ -2,8 +2,8 @@ extends Node
 
 var tool_name = EditorToolsController.Tools.insert
 func _ready():
-	MouseController.mouse_click.connect(mouse_click)
-	MouseController.mouse_move.connect(mouse_move)
+	InputController.mouse_click.connect(mouse_click)
+	InputController.mouse_move.connect(mouse_move)
 	EditorToolsController.start_tool.connect(start)
 	EditorToolsController.end_tool.connect(end)
 
