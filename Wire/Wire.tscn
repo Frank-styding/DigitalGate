@@ -4,6 +4,6 @@
 
 [node name="Wire" type="Line2D"]
 width = 20.0
-default_color = Color(0.670588, 0.529412, 0.239216, 0.258824)
+default_color = Color(0.671, 0.529, 0.239, 0.239)
 joint_mode = 2
 script = ExtResource("1_kvl2t")

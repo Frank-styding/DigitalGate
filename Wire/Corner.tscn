@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://d1svdv0eat45e"]
+[gd_scene load_steps=3 format=3 uid="uid://d1svdv0eat45e"]
+
+[ext_resource type="Script" path="res://Wire/Corner.gd" id="1_m1ckb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_juv5y"]
 corner_radius_top_left = 5
@@ -7,8 +9,10 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [node name="Corner" type="Node2D"]
+script = ExtResource("1_m1ckb")
 
 [node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(22, 22)
 offset_left = -11.0
 offset_top = -11.0
 offset_right = 11.0

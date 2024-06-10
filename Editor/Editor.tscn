@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://dlp74diwwko26"]
+[gd_scene load_steps=13 format=3 uid="uid://dlp74diwwko26"]
 
 [ext_resource type="Script" path="res://Editor/Editor.gd" id="1_uybv6"]
 [ext_resource type="Script" path="res://Editor/Camera2D.gd" id="2_qae2w"]
 [ext_resource type="Texture2D" uid="uid://b0kitpojo2al4" path="res://Tails/Background.png" id="3_xef5b"]
+[ext_resource type="PackedScene" uid="uid://c8tui5kbtmeoq" path="res://Editor/Selection.tscn" id="4_5loei"]
 [ext_resource type="PackedScene" uid="uid://dec5a0vjbo8ac" path="res://Gate/Gate.tscn" id="4_8b4gl"]
 [ext_resource type="Script" path="res://Editor/Board.gd" id="5_wjc1y"]
 [ext_resource type="PackedScene" uid="uid://cisshxsq7ec05" path="res://Editor/GatePreview.tscn" id="6_1v56g"]
@@ -39,6 +40,9 @@ position = Vector2(446.939, 317.652)
 tile_set = SubResource("TileSet_8rygb")
 format = 2
 script = ExtResource("5_wjc1y")
+
+[node name="Selection" parent="Controls" instance=ExtResource("4_5loei")]
+visible = false
 
 [node name="GatePreview" parent="Controls" instance=ExtResource("6_1v56g")]
 visible = false

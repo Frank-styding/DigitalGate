@@ -19,6 +19,7 @@ class GateBehavior:
 		}
 
 class GateData:
+	static var gate_count = -1
 	var behavior: GateBehavior
 	var left_co = []
 	var right_co = []
@@ -27,16 +28,18 @@ class GateData:
 	
 	var grid_pos = Vector2i(0, 0)
 	var grid_size = Vector2i(0, 0)
-	
+	var selected: bool
 	var id;
 	
 	func _init(n_behavior, left=[], right=[], top=[], bottom=[]):
+		gate_count += 1
 		self.behavior = n_behavior
 		self.left_co = left
 		self.right_co = right
 		self.top_co = top
 		self.bottom_co = bottom
-		self.id = Uuid.generate_uuid_v4()
+		self.id = str(gate_count)
+		self.selected = false
 		
 		if left.size() == 0&&right.size() == 0&&top.size() == 0&&bottom.size() == 0:
 			for con_name in n_behavior.connections.keys():

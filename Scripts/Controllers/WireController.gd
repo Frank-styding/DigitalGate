@@ -1,8 +1,6 @@
 extends Node
 
-#signal on_create_wire(current_wire);
-#signal on_update_wire();
-#signal on_clear_current_wire();
+signal on_connect(gate_id, conection);
 
 var wires_data = {}
 var current_wire: CWire.WireData = null
@@ -23,8 +21,25 @@ func end(gate_id: String, connection: String):
 
 	if gate_id == start_connection["gate"]&&connection == start_connection["connection"]:
 		return
-
+    
 	current_wire.end(gate_id, connection)
+	
+	wires_data[current_wire.id] = current_wire
+
+	EditorController.update_wire.emit(current_wire, current_wire.current_path_idx)
+
+	current_wire = null
+	start_connection = {
+		"gate": "",
+		"connection": ""
+	}
+
+func set_end(gate_id: String, connection: String):
+
+	if gate_id == start_connection["gate"]&&connection == start_connection["connection"]:
+		return
+    
+	current_wire.set_end(gate_id, connection)
 	
 	wires_data[current_wire.id] = current_wire
 
@@ -62,6 +77,15 @@ func move_point(grid_pos: Vector2, mouse_pos: Vector2, board: Board):
 	if current_wire == null:
 		return
 	current_wire.move_point(grid_pos, mouse_pos, board)
+	EditorController.update_wire.emit(current_wire, current_wire.current_path_idx)
+
+func set_point(grid_pos: Vector2):
+	if current_wire == null:
+		return
+	current_wire.add_point(grid_pos)
+	current_wire.update_point(grid_pos)
+	EditorController.update_wire.emit(current_wire, current_wire.current_path_idx)
+
 func has_current_wire():
 	return current_wire != null
 
@@ -69,6 +93,18 @@ func add_point(grid_pos: Vector2):
 	if current_wire == null:
 		return
 	current_wire.add_point(grid_pos)
+
+func set_path(path):
+	if current_wire == null:
+		return
+
+	set_point(path[0])
+	for i in range(1, path.size()):
+		set_point(path[i])
+
+	#current_wire.set_path(path)
+
+	#EditorController.update_wire.emit(current_wire, current_wire.current_path_idx)
 
 func cancel_wire():
 	if current_wire == null:

@@ -2,8 +2,8 @@ extends ColorRect
 
 class_name GatePreview
 
-@export var error_color = Color(0.973, 0.027, 0.251, 0.42)
-@export var normal_color = Color(0, 0.627, 0.371, 0.42)
+var error_color = Colors.insert_error_c
+var normal_color = Colors.inser_normal_c
 	
 func change_to_error():
 	self.color = error_color

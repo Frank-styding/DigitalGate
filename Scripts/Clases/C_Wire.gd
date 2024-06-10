@@ -1,6 +1,7 @@
 extends Node
 
 class WireData:
+	static var wire_count = -1;
 	var paths = []
 	var input = {}
 	var outputs = []
@@ -17,8 +18,11 @@ class WireData:
 	var direction: Vector2
 	var is_end: bool
 	var last_point: Vector2
+
+	var selected: bool
 	
 	func _init():
+		wire_count += 1
 		current_path_idx = 0
 		current_point_idx = -1
 		size = 1
@@ -28,7 +32,8 @@ class WireData:
 		start_click = true
 		is_end = false
 		last_point = Vector2()
-		id = Uuid.generate_uuid_v4()
+		id = str(wire_count)
+		selected = false
 
 	func is_grid_pos_inside(point: Vector2, exclude_start=false, exclude_last=false, all=true):
 		for i in range((0 if exclude_start else 1), paths[current_path_idx].size() + ( - 1 if exclude_last else 0)):
@@ -202,6 +207,29 @@ class WireData:
 		current_point_idx = -1
 		start_click = false
 	
+	func set_end(gate_id: String, connection: String):
+		if not is_start_path:
+			return
+			
+		var gate = GateController.get_gate_data(gate_id) as CGate.GateData
+		if gate == null:
+			return
+			
+		if input["gate"] == gate_id&&input["connection"] == connection:
+			return
+		
+		outputs.append({
+			"gate": gate_id,
+			"connection": connection
+		})
+
+		var n_point = gate.get_conection_pos(connection)
+		add_point(n_point)
+		is_end = true
+		is_start_path = false
+		current_point_idx = -1
+		start_click = false
+	
 	func get_global_paths(board: Board):
 		var n_paths = []
 		for i in range(paths.size()):
@@ -221,3 +249,8 @@ class WireData:
 			return true
 
 		return false
+
+	func set_path(path):
+		var start_point = paths[current_path_idx]
+		paths[current_path_idx] = path
+		paths[current_path_idx].insert(0, start_point)

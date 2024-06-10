@@ -6,6 +6,21 @@ var idx;
 @onready var Corner = preload ("res://Wire/Corner.tscn")
 
 var corners = []
+
+func select():
+	var n_color = Color(Colors.select_c)
+	n_color.a = 0.3
+	default_color = n_color
+
+	for i in range(corners.size()):
+		corners[i].set_color(Colors.select_c)
+
+func un_select():
+	pass
+	default_color = Colors.wire_c
+	for i in range(corners.size()):
+		corners[i].set_color(Colors.wire_corner_color)
+
 func update_points(path):
 	var min_size = min(path.size(), points.size())
 
@@ -29,7 +44,7 @@ func update_points(path):
 	else:
 		for i in range(path.size(), points.size()):
 			points.remove_at(i)
-			if i - 1 >= 0&&i - 1&&i - 1 < corners.size():
+			if i - 1 >= 1&&i - 1 < corners.size() - 1:
 				remove_child(corners[i - 2])
 				corners[i - 1].free()
 				corners.remove_at(i - 2)

@@ -50,7 +50,7 @@ var or_data = CGate.GateBehavior.new(
 var behavior_data: Dictionary = {"And": and_data, "Or": or_data}
 var current_behavior: CGate.GateBehavior = null
 var current_gate_data: CGate.GateData = null
-var list_gates = {};
+var gates_data = {};
 var grid = {}
 
 func register_behavior(data: CGate.GateBehavior):
@@ -67,7 +67,7 @@ func new_gate_data():
 	return current_gate_data
 
 func register_gate_data(gate_data):
-	list_gates[gate_data.id] = gate_data
+	gates_data[gate_data.id] = gate_data
 	var x = gate_data.grid_pos.x
 	var y = gate_data.grid_pos.y
 	var size_x = gate_data.grid_size.x
@@ -107,6 +107,6 @@ func cell_is_emty(gate: CGate.GateData):
 	return true
 
 func get_gate_data(gate_id: String):
-	if not list_gates.has(gate_id):
+	if not gates_data.has(gate_id):
 		return null
-	return list_gates[gate_id]
+	return gates_data[gate_id]

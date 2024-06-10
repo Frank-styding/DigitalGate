@@ -1,26 +1,11 @@
-@tool
 extends CenterContainer
 class_name GateConnection;
 
 var stylebox = StyleBoxFlat.new()
 
-@export var color = Colors.output_c:
-	set(n_color):
-		stylebox.bg_color = n_color
-		color = n_color
-		#$Panel.add_theme_stylebox_override("panel", stylebox)
-@export var n_size: Vector2 = Vector2(10, 10):
-	set(n_size1):
-		n_size = n_size1
-		#$Panel.custom_minimum_size = n_size;
-@export var radius: int = 0:
-	set(n_radius):
-		radius = n_radius
-		stylebox.corner_radius_bottom_left = n_radius
-		stylebox.corner_radius_bottom_right = n_radius
-		stylebox.corner_radius_top_right = n_radius
-		stylebox.corner_radius_top_left = n_radius
-		#$Panel.add_theme_stylebox_override("panel", stylebox)
+var color = Colors.output_c
+var n_size: Vector2 = Vector2(33, 10)
+var radius: int = 6
 
 var horizontal = true
 var binary_width = 1
@@ -41,9 +26,17 @@ func _ready():
 	else:
 		panel.custom_minimum_size = Vector2(n_size.y, n_size.x)
 	panel.add_theme_stylebox_override("panel", stylebox)
+	WireController.on_connect.connect(on_connect)
 
 var mouse_is_over = false
 var click = true
+
+func on_connect(n_gate_id: String, n_connection: String):
+	if gate_id != n_gate_id||n_connection != connection_name:
+		return
+
+	WireController.start(gate_id, connection_name)
+	WireController.set_end(gate_id, connection_name)
 
 func _input(event: InputEvent):
 	if event is InputEventMouseButton:

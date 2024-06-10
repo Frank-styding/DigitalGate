@@ -18,6 +18,7 @@ func _input(event: InputEvent):
 					click = false
 			else:
 				click = true
+				mosue_up.emit(event)
 	elif event is InputEventMouseMotion:
 		mouse_move.emit(event)
 

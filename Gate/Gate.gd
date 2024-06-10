@@ -2,12 +2,20 @@
 extends Node2D
 
 @onready var GateContection = preload ("res://Gate/Connection.tscn")
+@onready var GateSelection = $SelectionGate
 
 var gate_data: CGate.GateData;
 func _ready():
 	if gate_data == null:
 		return
+	$SelectionGate.material.set_shader_parameter("color", Colors.select_c)
 	init()
+
+func select():
+	$SelectionGate.show()
+
+func un_select():
+	$SelectionGate.hide()
 
 func set_gate_data(data):
 	gate_data = data
@@ -23,6 +31,15 @@ func calc_size():
 	var n_width = (gate_data.grid_size.x) * Global.cell_size
 	var n_height = (gate_data.grid_size.y) * Global.cell_size
 	$Box.size = Vector2i(n_width, n_height)
+
+	GateSelection.size = Vector2i(n_width, n_height)
+
+	if gate_data.left_co.size() > 0:
+		GateSelection.position += Vector2( - 1, 0) * 16
+		GateSelection.size = Vector2i(n_width, n_height) + Vector2i(2, 0) * 16
+		
+	if gate_data.top_co.size() > 0:
+		GateSelection.position += Vector2(0, -1) * 16
 
 func create_conections(list, container_name, horizontal):
 	var container = find_child(container_name)

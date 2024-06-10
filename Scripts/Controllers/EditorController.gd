@@ -11,6 +11,7 @@ signal destroy_gate(gate_data: CGate.GateData)
 var board: Board
 var editor: Editor
 var gate_preview: GatePreview
+var selection: Selection
 
 func global_position():
     return editor.get_global_mouse_position()

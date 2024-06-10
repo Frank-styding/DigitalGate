@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://dec5a0vjbo8ac"]
+[gd_scene load_steps=4 format=3 uid="uid://dec5a0vjbo8ac"]
 
 [ext_resource type="Script" path="res://Gate/Gate.gd" id="1_h8xxt"]
+[ext_resource type="Shader" path="res://Gate/SelectedGate.gdshader" id="2_6q300"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m5ab5"]
+shader = ExtResource("2_6q300")
+shader_parameter/color = Vector3(0.514, 1, 1)
 
 [node name="Gate" type="Node2D"]
 script = ExtResource("1_h8xxt")
@@ -88,3 +93,11 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/separation = 0
+
+[node name="SelectionGate" type="ColorRect" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_m5ab5")
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 33.0
+offset_bottom = 33.0

@@ -1,6 +1,6 @@
 extends Node
 
-var tool_name = EditorToolsController.Tools.insert
+var tool = EditorToolsController.Tools.insert
 func _ready():
 	InputController.mouse_click.connect(mouse_click)
 	InputController.mouse_move.connect(mouse_move)
@@ -9,12 +9,12 @@ func _ready():
 
 var n_gate_data;
 func start(mode):
-	if mode != EditorToolsController.Tools.insert:
+	if mode != tool:
 		return
 
 	EditorController.gate_preview.show()
-	GateController.set_current("Or")
-	n_gate_data = GateController.new_gate_data()
+	#GateController.set_current("Or")
+	#n_gate_data = GateController.new_gate_data()
 	
 	GateController.set_current("And")
 	n_gate_data = GateController.new_gate_data()
@@ -27,13 +27,14 @@ func start(mode):
 	n_gate_data = GateController.new_gate_data()
 	mouse_insert_gate(Vector2i(0, 4))
 
-	pass
-
 func end(mode):
-	if mode != EditorToolsController.Tools.insert:
+	if mode != tool:
 		return
 	EditorController.gate_preview.hide()
 	pass
+	
+func is_insert_mode():
+	return EditorToolsController.is_tool(tool )
 
 func mouse_insert_gate(n_pos=null):
 	if not n_gate_data is CGate.GateData:
@@ -49,7 +50,7 @@ func mouse_insert_gate(n_pos=null):
 
 func mouse_move(_event: InputEvent):
 
-	if not EditorToolsController.is_tool(tool_name):
+	if not is_insert_mode():
 		return
 
 	var grid_pos = EditorController.grid_pos()
@@ -62,7 +63,7 @@ func mouse_move(_event: InputEvent):
 		EditorController.gate_preview.change_to_error()
 
 func mouse_click(_event: InputEvent):
-	if not EditorToolsController.is_tool(tool_name):
+	if not is_insert_mode():
 		return
 	
 	mouse_insert_gate()
